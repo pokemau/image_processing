@@ -38,13 +38,16 @@
             inversionToolStripMenuItem = new ToolStripMenuItem();
             mirrorHorizontalToolStripMenuItem = new ToolStripMenuItem();
             mirrorVerticalToolStripMenuItem = new ToolStripMenuItem();
+            histToolStripMenuItem = new ToolStripMenuItem();
             openFileDialog1 = new OpenFileDialog();
             saveFileDialog1 = new SaveFileDialog();
             pictureBox1 = new PictureBox();
             pictureBox2 = new PictureBox();
+            trackBar1 = new TrackBar();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
             SuspendLayout();
             // 
             // menuStrip1
@@ -79,7 +82,7 @@
             // 
             // dIPToolStripMenuItem
             // 
-            dIPToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { pixelCopyToolStripMenuItem, greyscalingToolStripMenuItem, inversionToolStripMenuItem, mirrorHorizontalToolStripMenuItem, mirrorVerticalToolStripMenuItem });
+            dIPToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { pixelCopyToolStripMenuItem, greyscalingToolStripMenuItem, inversionToolStripMenuItem, mirrorHorizontalToolStripMenuItem, mirrorVerticalToolStripMenuItem, histToolStripMenuItem });
             dIPToolStripMenuItem.Name = "dIPToolStripMenuItem";
             dIPToolStripMenuItem.Size = new Size(37, 20);
             dIPToolStripMenuItem.Text = "DIP";
@@ -119,6 +122,13 @@
             mirrorVerticalToolStripMenuItem.Text = "Mirror Vertical";
             mirrorVerticalToolStripMenuItem.Click += mirrorVerticalToolStripMenuItem_Click;
             // 
+            // histToolStripMenuItem
+            // 
+            histToolStripMenuItem.Name = "histToolStripMenuItem";
+            histToolStripMenuItem.Size = new Size(180, 22);
+            histToolStripMenuItem.Text = "Hist";
+            histToolStripMenuItem.Click += histToolStripMenuItem_Click;
+            // 
             // openFileDialog1
             // 
             openFileDialog1.FileName = "openFileDialog1";
@@ -130,7 +140,7 @@
             // 
             // pictureBox1
             // 
-            pictureBox1.Location = new Point(12, 27);
+            pictureBox1.Location = new Point(12, 117);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(411, 411);
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -139,18 +149,29 @@
             // 
             // pictureBox2
             // 
-            pictureBox2.Location = new Point(448, 27);
+            pictureBox2.Location = new Point(461, 117);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(411, 411);
             pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox2.TabIndex = 2;
             pictureBox2.TabStop = false;
             // 
+            // trackBar1
+            // 
+            trackBar1.Location = new Point(461, 48);
+            trackBar1.Maximum = 50;
+            trackBar1.Minimum = -50;
+            trackBar1.Name = "trackBar1";
+            trackBar1.Size = new Size(350, 45);
+            trackBar1.TabIndex = 3;
+            trackBar1.Scroll += trackBar1_Scroll;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(872, 450);
+            ClientSize = new Size(872, 540);
+            Controls.Add(trackBar1);
             Controls.Add(pictureBox2);
             Controls.Add(pictureBox1);
             Controls.Add(menuStrip1);
@@ -161,6 +182,7 @@
             menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -181,5 +203,7 @@
         private SaveFileDialog saveFileDialog1;
         private PictureBox pictureBox1;
         private PictureBox pictureBox2;
+        private ToolStripMenuItem histToolStripMenuItem;
+        private TrackBar trackBar1;
     }
 }

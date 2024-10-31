@@ -21,18 +21,7 @@ namespace image_processing
 
         private void pixelCopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            processed = new Bitmap(loaded.Width, loaded.Height);
-
-            Color pixel;
-            for (int x = 0; x < loaded.Width; x++)
-            {
-                for (int y = 0; y < loaded.Height; y++)
-                {
-                    pixel = loaded.GetPixel(x, y);
-                    processed.SetPixel(x, y, pixel);
-                }
-            }
-
+            BasicDIP.PixelCopy(ref loaded, ref processed);
             pictureBox2.Image = processed;
         }
 
@@ -48,69 +37,37 @@ namespace image_processing
 
         private void greyscalingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            processed = new Bitmap(loaded.Width, loaded.Height);
-            Color pixel;
-            int average;
-
-            for (int x = 0; x < loaded.Width; x++)
-            {
-                for (int y = 0; y < loaded.Height; y++)
-                {
-                    pixel = loaded.GetPixel(x, y);
-                    average = (int)(pixel.R + pixel.G + pixel.B) / 3;
-                    Color grey = Color.FromArgb(average, average, average);
-                    processed.SetPixel(x, y, grey);
-                }
-            }
+            BasicDIP.GrayScale(ref loaded, ref processed);
             pictureBox2.Image = processed;
         }
 
         private void inversionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            processed = new Bitmap(loaded.Width, loaded.Height);
-            Color pixel;
-
-            for (int x = 0; x < loaded.Width; x++)
-            {
-                for (int y = 0; y < loaded.Height; y++)
-                {
-                    pixel = loaded.GetPixel(x, y);
-                    Color inverted = Color.FromArgb(255 - pixel.R, 255 - pixel.G, 255 - pixel.B);
-                    processed.SetPixel(x, y, inverted);
-                }
-            }
+            BasicDIP.Inversion(ref loaded, ref processed);
             pictureBox2.Image = processed;
         }
 
         private void mirrorHorizontalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            processed = new Bitmap(loaded.Width, loaded.Height);
-            Color pixel;
-
-            for (int x = 0; x < loaded.Width; x++)
-            {
-                for (int y = 0; y < loaded.Height; y++)
-                {
-                    pixel = loaded.GetPixel(x, y);
-                    processed.SetPixel(x, loaded.Height - y - 1, pixel);
-                }
-            }
+            BasicDIP.MirrorHorizontal(ref loaded, ref processed);
             pictureBox2.Image = processed;
         }
 
         private void mirrorVerticalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            processed = new Bitmap(loaded.Width, loaded.Height);
-            Color pixel;
+            BasicDIP.MirrorVertical(ref loaded, ref processed);
+            pictureBox2.Image = processed;
+        }
 
-            for (int x = 0; x < loaded.Width; x++)
-            {
-                for (int y = 0; y < loaded.Height; y++)
-                {
-                    pixel = loaded.GetPixel(x, y);
-                    processed.SetPixel(loaded.Width - x - 1, y, pixel);
-                }
-            }
+        private void histToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BasicDIP.Hist(ref loaded, ref processed);
+            pictureBox2.Image = processed;
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            BasicDIP.Brightness(ref loaded, ref processed, trackBar1.Value);
             pictureBox2.Image = processed;
         }
     }
