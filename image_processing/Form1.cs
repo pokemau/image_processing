@@ -1,5 +1,6 @@
 using WebCamLib;
 using ImageProcess2;
+using System.Diagnostics;
 
 namespace image_processing
 {
@@ -119,19 +120,22 @@ namespace image_processing
             webcamFilter = filter.Gray;
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private Bitmap getBmap()
         {
             IDataObject data;
             Image bmap;
+
             devices[0].Sendmessage();
             data = Clipboard.GetDataObject();
             bmap = (Image)data.GetData("System.Drawing.Bitmap", true);
             if (bmap == null)
-            {
-                return;
-            }
+                return null;
+            return new Bitmap(bmap);
+        }
 
-            b = new Bitmap(bmap);
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            b = getBmap();
 
             switch (webcamFilter)
             {
@@ -144,16 +148,20 @@ namespace image_processing
                     pictureBox2.Image = b;
                     return;
                 case filter.Histogram:
-                    DIP.Hist(b, ref processed);
+                    BasicDIP.Hist(b, ref processed);
+                    pictureBox2.Image = processed;
                     break;
                 case filter.Sepia:
-                    DIP.Sepia(b, ref processed);
+                    BasicDIP.Sepia(b, ref processed);
+                    pictureBox2.Image = processed;
                     break;
                 case filter.MirrorVertical:
-                    DIP.MirrorVertical(b, ref processed);
+                    BasicDIP.MirrorVertical(b, ref processed);
+                    pictureBox2.Image = processed;
                     break;
                 case filter.MirrorHorizontal:
-                    DIP.MirrorHorizontal(b, ref processed);
+                    BasicDIP.MirrorHorizontal(b, ref processed);
+                    pictureBox2.Image = processed;
                     break;
             }
         }
