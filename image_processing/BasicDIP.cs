@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace image_processing
 {
     static class BasicDIP
     {
-        public static void PixelCopy(ref Bitmap a, ref Bitmap b)
+        public static void PixelCopy(Bitmap a, ref Bitmap b)
         {
             b = new Bitmap(a.Width, a.Height);
             Color pixel;
@@ -22,7 +23,7 @@ namespace image_processing
             }
         }
 
-        public static void GrayScale(ref Bitmap a, ref Bitmap b)
+        public static void GrayScale(Bitmap a, ref Bitmap b)
         {
             b = new Bitmap(a.Width, a.Height);
 
@@ -40,7 +41,7 @@ namespace image_processing
             }
         }
 
-        public static void Inversion(ref Bitmap a, ref Bitmap b)
+        public static void Inversion(Bitmap a, ref Bitmap b)
         {
             b = new Bitmap(a.Width, a.Height);
 
@@ -56,7 +57,7 @@ namespace image_processing
             }
         }
 
-        public static void MirrorHorizontal(ref Bitmap a, ref Bitmap b)
+        public static void MirrorHorizontal(Bitmap a, ref Bitmap b)
         {
             b = new Bitmap(a.Width, a.Height);
 
@@ -70,7 +71,7 @@ namespace image_processing
                 }
             }
         }
-        public static void MirrorVertical(ref Bitmap a, ref Bitmap b)
+        public static void MirrorVertical(Bitmap a, ref Bitmap b)
         {
             b = new Bitmap(a.Width, a.Height);
 
@@ -85,26 +86,33 @@ namespace image_processing
             }
         }
 
-        public static void Hist(ref Bitmap a, ref Bitmap b)
+        public static void Hist(Bitmap a, ref Bitmap b)
         {
             Color sample;
-            Byte grayData;
-            int[] histdata = new int[256];
-            
+            Color gray;
+            Byte graydata;
+            int[] histtdata = new int[256];
             for (int x = 0; x < a.Width; x++)
             {
                 for (int y = 0; y < a.Height; y++)
                 {
                     sample = a.GetPixel(x, y);
-                    grayData = (byte)((sample.R + sample.G + sample.B) / 3);
-                    histdata[grayData]++;
+                    graydata = (byte)((sample.R + sample.G + sample.B) / 3);
+                    histtdata[graydata]++;
                 }
             }
 
             b = new Bitmap(256, 800);
             for (int x = 0; x < 256; x++)
             {
-                for (int y = 0; y < Math.Min(histdata[x] / 5, b.Height - 1); y++)
+                for (int y = 0; y < 800; y++)
+                {
+                    b.SetPixel(x, y, Color.White);
+                }
+            }
+            for (int x = 0; x < 256; x++)
+            {
+                for (int y = 0; y < Math.Min(histtdata[x] / 5, b.Height - 1); y++)
                 {
                     b.SetPixel(x, (b.Height - 1) - y, Color.Black);
                 }
@@ -133,6 +141,27 @@ namespace image_processing
                             Math.Max(temp.G + value, 0), 
                             Math.Max(temp.B + value, 0));
                     b.SetPixel(x, y, changed);
+                }
+            }
+        }
+
+        public static void Sepia(Bitmap a, ref Bitmap b)
+        {
+            b = new Bitmap(a.Width, a.Height);
+
+            Color pixel;
+            int pr, pg, pb;
+
+            for (int x = 0; x < a.Width; x++)
+            {
+                for (int y = 0; y < a.Height; y++)
+                {
+                    pixel = a.GetPixel(x, y);
+                    pr = (int)((pixel.R * .393) + (pixel.G * .769) + (pixel.B * .189));
+                    pg = (int)((pixel.R * .349) + (pixel.G * .686) + (pixel.B * .168));
+                    pb = (int)((pixel.R * .272) + (pixel.G * .534) + (pixel.B * .131));
+                    Color color = Color.FromArgb((Math.Min(255, pr)), Math.Min(255, pg), Math.Min(255, pb));
+                    b.SetPixel(x, y, color);
                 }
             }
         }
