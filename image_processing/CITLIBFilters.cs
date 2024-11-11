@@ -74,7 +74,7 @@ namespace ImageProcess2
 		public static bool GrayScale(Bitmap b)
 		{
 			// GDI+ still lies to us - the return format is BGR, NOT RGB.
-			BitmapData bmData = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+            BitmapData bmData = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
 
 			int stride = bmData.Stride;
 			System.IntPtr Scan0 = bmData.Scan0;
