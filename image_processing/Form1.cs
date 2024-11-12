@@ -3,22 +3,12 @@ using ImageProcess2;
 using System.Diagnostics;
 using AForge.Video;
 using AForge.Video.DirectShow;
-using System.Runtime.InteropServices.ObjectiveC;
 
 namespace image_processing
 {
     public partial class Form1 : Form
     {
-        //AForge
-        private FilterInfoCollection videoDevices;
-        private VideoCaptureDevice videoSource;
-
-        int deviceIndex;
-
-        Bitmap loaded, processed;
-        Device[] devices;
-        Bitmap b;
-        enum filter
+        enum Filter
         {
             None,
             Gray,
@@ -38,97 +28,23 @@ namespace image_processing
             EmbossHorizontal,
             EmbossVertical,
         }
+        private FilterInfoCollection videoDevices;
+        private VideoCaptureDevice videoSource;
 
-        filter webcamFilter;
+        Bitmap loaded, processed;
+        Device[] devices;
+        Bitmap b;
+        Filter webcamFilter;
+
         public Form1()
         {
             InitializeComponent();
-            webcamFilter = filter.None;
-            deviceIndex = 0;
+            webcamFilter = Filter.None;
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            devices = DeviceManager.GetAllDevices();
-            DetectWebcamDevices();
-        }
-        private void Form1_Closing(object sender, EventArgs e)
-        {
-            turnOffCamera();
-        }
-        private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            loaded = new Bitmap(openFileDialog1.FileName);
-            pictureBox1.Image = loaded;
-        }
-
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            openFileDialog1.ShowDialog();
-            if (timer1.Enabled)
-                turnOffCamera();
-        }
-        private void pixelCopyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            BasicDIP.PixelCopy(loaded, ref processed);
-            pictureBox2.Image = processed;
-        }
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                processed.Save(saveFileDialog1.FileName);
-            }
-        }
-        private void saveFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            processed.Save(saveFileDialog1.FileName);
-        }
-        private void greyscalingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            BasicDIP.GrayScale(loaded, ref processed);
-            pictureBox2.Image = processed;
-        }
-        private void inversionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            BasicDIP.Inversion(loaded, ref processed);
-            pictureBox2.Image = processed;
-        }
-        private void mirrorHorizontalToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            BasicDIP.MirrorHorizontal(loaded, ref processed);
-            pictureBox2.Image = processed;
-        }
-        private void mirrorVerticalToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            BasicDIP.MirrorVertical(loaded, ref processed);
-            pictureBox2.Image = processed;
-        }
-        private void histToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            BasicDIP.Hist(loaded, ref processed);
-            pictureBox2.Image = processed;
-        }
-        private void trackBar1_Scroll(object sender, EventArgs e)
-        {
-            BasicDIP.Brightness(ref loaded, ref processed, trackBar1.Value);
-            pictureBox2.Image = processed;
-        }
-        private void sepiaToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            BasicDIP.Sepia(loaded, ref processed);
-            pictureBox2.Image = processed;
-        }
-        private void offToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            devices[0].Stop();
-        }
-        private void grayToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!timer1.Enabled)
-                timer1.Enabled = true;
-            webcamFilter = filter.Gray;
-        }
+        /********************
+         * HELPER FUNCTIONS *
+         *******************/
         private Bitmap getBmap()
         {
             //IDataObject data;
@@ -141,85 +57,12 @@ namespace image_processing
             //    return null;
             //return new Bitmap(bmap);
 
-            if (pictureBox1.Image == null)
+            if (leftPictureBox.Image == null)
             {
                 return null;
             }
-            return new Bitmap(pictureBox1.Image);
+            return new Bitmap(leftPictureBox.Image);
         }
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            b = getBmap();
-
-            switch (webcamFilter)
-            {
-                case filter.Gray:
-                    BitmapFilter.GrayScale(b);
-                    pictureBox2.Image = b;
-                    return;
-                case filter.Inversion:
-                    BitmapFilter.Invert(b);
-                    pictureBox2.Image = b;
-                    return;
-                case filter.Histogram:
-                    BasicDIP.Hist(b, ref processed);
-                    pictureBox2.Image = processed;
-                    break;
-                case filter.Sepia:
-                    BasicDIP.Sepia(b, ref processed);
-                    pictureBox2.Image = processed;
-                    break;
-                case filter.MirrorVertical:
-                    BasicDIP.MirrorVertical(b, ref processed);
-                    pictureBox2.Image = processed;
-                    break;
-                case filter.MirrorHorizontal:
-                    BasicDIP.MirrorHorizontal(b, ref processed);
-                    pictureBox2.Image = processed;
-                    break;
-                case filter.Smooth:
-                    BasicDIP.Smoothing(b, ref processed);
-                    pictureBox2.Image = processed;
-                    break;
-                case filter.GaussianBlur:
-                    BasicDIP.GaussianBlur(b, ref processed);
-                    pictureBox2.Image = processed;
-                    break;
-                case filter.Sharpen:
-                    BasicDIP.Sharpen(b, ref processed);
-                    pictureBox2.Image = processed;
-                    break;
-                case filter.MeanRemoval:
-                    BasicDIP.MeanRemoval(b, ref processed);
-                    pictureBox2.Image = processed;
-                    break;
-                case filter.EmbossLaplascian:
-                    BasicDIP.EmbossLaplascian(b, ref processed);
-                    pictureBox2.Image = processed;
-                    break;
-                case filter.EmbossHoriVert:
-                    BasicDIP.EmbossHoriVerti(b, ref processed);
-                    pictureBox2.Image = processed;
-                    break;
-                case filter.EmbossAllDirections:
-                    BasicDIP.EmbossAllDirections(b, ref processed);
-                    pictureBox2.Image = processed;
-                    break;
-                case filter.EmbossLossy:
-                    BasicDIP.EmbossLossy(b, ref processed);
-                    pictureBox2.Image = processed;
-                    break;
-                case filter.EmbossHorizontal:
-                    BasicDIP.EmbossHorizontal(b, ref processed);
-                    pictureBox2.Image = processed;
-                    break;
-                case filter.EmbossVertical:
-                    BasicDIP.EmbossVertical(b, ref processed);
-                    pictureBox2.Image = processed;
-                    break;
-            }
-        }
-
         private void turnOffCamera()
         {
             if (timer1.Enabled)
@@ -228,61 +71,92 @@ namespace image_processing
                 videoSource.WaitForStop();
             }
         }
-        private void inversionToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void DetectWebcamDevices()
         {
-            webcamFilter = filter.Inversion;
-            if (!timer1.Enabled)
-                timer1.Enabled = true;
-        }
-        private void noneToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            webcamFilter = filter.None;
-            timer1.Enabled = false;
-        }
-        private void mirrorHorizontalToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            if (!timer1.Enabled)
-                timer1.Enabled = true;
-            webcamFilter = filter.MirrorHorizontal;
-        }
-        private void mirrorVerticalToolStripMenuItem1_Click_1(object sender, EventArgs e)
-        {
-            if (!timer1.Enabled)
-                timer1.Enabled = true;
-            webcamFilter = filter.MirrorVertical;
-        }
-        private void sepiaToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            if (!timer1.Enabled)
-                timer1.Enabled = true;
-            webcamFilter = filter.Sepia;
-        }
-        private void histToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            if (!timer1.Enabled)
-                timer1.Enabled = true;
-            webcamFilter = filter.Histogram;
-        }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (openFileDialog2.ShowDialog() == DialogResult.OK)
+            // AForge
+            videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            if (videoDevices.Count == 0)
+                MessageBox.Show("No video devices found.");
+            else
             {
-                loaded = new Bitmap(openFileDialog2.FileName);
-                pictureBox1.Image = loaded;
+                Debug.WriteLine("DEVICES:  ");
+                foreach (FilterInfo device in videoDevices)
+                    devicesComboBox.Items.Add(device.Name);
             }
         }
-        private void button2_Click(object sender, EventArgs e)
+        private void turnOnAForgeDevice(int deviceId)
         {
-            if (openFileDialog3.ShowDialog() == DialogResult.OK)
+            if (videoDevices.Count >= deviceId + 1)
             {
-                loaded = new Bitmap(openFileDialog3.FileName);
-                pictureBox2.Image = loaded;
+                var filterInfo = videoDevices[deviceId];
+                Debug.WriteLine($"Connecting to [{filterInfo.Name}]...");
+                videoSource = new VideoCaptureDevice(filterInfo.MonikerString);
+                videoSource.NewFrame += new NewFrameEventHandler(Video_NewFrame);
+                videoSource.Start();
             }
         }
-        private void button3_Click(object sender, EventArgs e)
+        private void Video_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
-            Bitmap image = new Bitmap(pictureBox1.Image);
-            Bitmap background = new Bitmap(pictureBox2.Image);
+            Bitmap frame = (Bitmap)eventArgs.Frame.Clone();
+            leftPictureBox.Image = frame; // Display the frame in pictureBox1
+        }
+
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            devices = DeviceManager.GetAllDevices();
+            DetectWebcamDevices();
+        }
+        private void Form1_Closing(object sender, EventArgs e)
+        {
+            turnOffCamera();
+        }
+        private void OpenFile_ToolStrip_Click(object sender, EventArgs e)
+        {
+            if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                loaded = new Bitmap(OpenFileDialog1.FileName);
+                leftPictureBox.Image = loaded;
+                if (timer1.Enabled)
+                    turnOffCamera();
+            }
+        }
+        private void SaveFile_ToolStrip_Click(object sender, EventArgs e)
+        {
+            if (SaveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                processed.Save(SaveFileDialog1.FileName);
+            }
+        }
+        private void saveImageBtn_Click(object sender, EventArgs e)
+        {
+            if (SaveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                rightPictureBox.Image.Save(SaveFileDialog1.FileName);
+            }
+        }
+        private void LoadImageBtn_Click(object sender, EventArgs e)
+        {
+            if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                loaded = new Bitmap(OpenFileDialog1.FileName);
+                leftPictureBox.Image = loaded;
+                if (timer1.Enabled)
+                    turnOffCamera();
+            }
+        }
+        private void LoadBackgroundBtn_Click(object sender, EventArgs e)
+        {
+            if (LoadBackgroundFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                loaded = new Bitmap(LoadBackgroundFileDialog.FileName);
+                midPictureBox.Image = loaded;
+            }
+        }
+        private void subtractBtn_Click(object sender, EventArgs e)
+        {
+            Bitmap image = new Bitmap(leftPictureBox.Image);
+            Bitmap background = new Bitmap(midPictureBox.Image);
             Bitmap result = new Bitmap(background.Width, background.Height);
             Color green = Color.FromArgb(0, 255, 0);
             int greygreen = (green.R + green.G + green.B) / 3;
@@ -302,203 +176,266 @@ namespace image_processing
                         result.SetPixel(x, y, backpixel);
                 }
             }
-            pictureBox3.Image = result;
+            rightPictureBox.Image = result;
         }
-        private void DetectWebcamDevices()
+        private void pixelCopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // AForge
-            videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            if (videoDevices.Count == 0)
-                MessageBox.Show("No video devices found.");
-            else
+            DIP.PixelCopy(loaded, ref processed);
+            midPictureBox.Image = processed;
+        }
+        private void greyscalingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DIP.GrayScale(loaded, ref processed);
+            midPictureBox.Image = processed;
+        }
+        private void inversionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DIP.Inversion(loaded, ref processed);
+            midPictureBox.Image = processed;
+        }
+        private void mirrorHorizontalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DIP.MirrorHorizontal(loaded, ref processed);
+            midPictureBox.Image = processed;
+        }
+        private void mirrorVerticalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DIP.MirrorVertical(loaded, ref processed);
+            midPictureBox.Image = processed;
+        }
+        private void histToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DIP.Hist(loaded, ref processed);
+            midPictureBox.Image = processed;
+        }
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            DIP.Brightness(ref loaded, ref processed, trackBar1.Value);
+            midPictureBox.Image = processed;
+        }
+        private void sepiaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DIP.Sepia(loaded, ref processed);
+            midPictureBox.Image = processed;
+        }
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            b = getBmap();
+
+            switch (webcamFilter)
             {
-                Debug.WriteLine("DEVICES:  ");
-                foreach (FilterInfo device in videoDevices)
-                    comboBox1.Items.Add(device.Name);
+                case Filter.Gray:
+                    BitmapFilter.GrayScale(b);
+                    midPictureBox.Image = b;
+                    return;
+                case Filter.Inversion:
+                    BitmapFilter.Invert(b);
+                    midPictureBox.Image = b;
+                    return;
+                case Filter.Histogram:
+                    DIP.Hist(b, ref processed);
+                    midPictureBox.Image = processed;
+                    break;
+                case Filter.Sepia:
+                    DIP.Sepia(b, ref processed);
+                    midPictureBox.Image = processed;
+                    break;
+                case Filter.MirrorVertical:
+                    DIP.MirrorVertical(b, ref processed);
+                    midPictureBox.Image = processed;
+                    break;
+                case Filter.MirrorHorizontal:
+                    DIP.MirrorHorizontal(b, ref processed);
+                    midPictureBox.Image = processed;
+                    break;
+
+                /*****************************
+                 * CONVOLUTION MATRIX PROCESS
+                 ****************************/
+                case Filter.Smooth:
+                    DIP.Smoothing(b, ref processed);
+                    midPictureBox.Image = processed;
+                    break;
+                case Filter.GaussianBlur:
+                    DIP.GaussianBlur(b, ref processed);
+                    midPictureBox.Image = processed;
+                    break;
+                case Filter.Sharpen:
+                    DIP.Sharpen(b, ref processed);
+                    midPictureBox.Image = processed;
+                    break;
+                case Filter.MeanRemoval:
+                    DIP.MeanRemoval(b, ref processed);
+                    midPictureBox.Image = processed;
+                    break;
+                case Filter.EmbossLaplascian:
+                    DIP.EmbossLaplacian(b, ref processed);
+                    midPictureBox.Image = processed;
+                    break;
+                case Filter.EmbossHoriVert:
+                    DIP.EmbossHoriVerti(b, ref processed);
+                    midPictureBox.Image = processed;
+                    break;
+                case Filter.EmbossAllDirections:
+                    DIP.EmbossAllDirections(b, ref processed);
+                    midPictureBox.Image = processed;
+                    break;
+                case Filter.EmbossLossy:
+                    DIP.EmbossLossy(b, ref processed);
+                    midPictureBox.Image = processed;
+                    break;
+                case Filter.EmbossHorizontal:
+                    DIP.EmbossHorizontal(b, ref processed);
+                    midPictureBox.Image = processed;
+                    break;
+                case Filter.EmbossVertical:
+                    DIP.EmbossVertical(b, ref processed);
+                    midPictureBox.Image = processed;
+                    break;
             }
         }
-
         private void smoothToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BasicDIP.Smoothing(loaded, ref processed);
-            pictureBox2.Image = processed;
-        }
-        private void gaussianBlurToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            BasicDIP.GaussianBlur(loaded, ref processed);
-            pictureBox2.Image = processed;
+            DIP.Smoothing(loaded, ref processed);
+            midPictureBox.Image = processed;
         }
         private void sharpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BasicDIP.Sharpen(loaded, ref processed);
-            pictureBox2.Image = processed;
+            DIP.Sharpen(loaded, ref processed);
+            midPictureBox.Image = processed;
         }
         private void meanRemovalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BasicDIP.MeanRemoval(loaded, ref processed);
-            pictureBox2.Image = processed;
+            DIP.MeanRemoval(loaded, ref processed);
+            midPictureBox.Image = processed;
         }
         private void embossLaplascianToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BasicDIP.EmbossLaplascian(loaded, ref processed);
-            pictureBox2.Image = processed;
+            DIP.EmbossLaplacian(loaded, ref processed);
+            midPictureBox.Image = processed;
         }
         private void embossHoriVertToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BasicDIP.EmbossHoriVerti(loaded, ref processed);
-            pictureBox2.Image = processed;
+            DIP.EmbossHoriVerti(loaded, ref processed);
+            midPictureBox.Image = processed;
         }
-
         private void embossAllDirectionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BasicDIP.EmbossAllDirections(loaded, ref processed);
-            pictureBox2.Image = processed;
+            DIP.EmbossAllDirections(loaded, ref processed);
+            midPictureBox.Image = processed;
         }
         private void embossLossyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BasicDIP.EmbossLossy(loaded, ref processed);
-            pictureBox2.Image = processed;
+            DIP.EmbossLossy(loaded, ref processed);
+            midPictureBox.Image = processed;
         }
         private void embossHorizontalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BasicDIP.EmbossHorizontal(loaded, ref processed);
-            pictureBox2.Image = processed;
+            DIP.EmbossHorizontal(loaded, ref processed);
+            midPictureBox.Image = processed;
         }
         private void embossVerticalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BasicDIP.EmbossVertical(loaded, ref processed);
-            pictureBox2.Image = processed;
-        }
-        //AForge camera
-        private void turnOnAForgeDevice(int deviceId)
-        {
-            if (videoDevices.Count >= deviceId + 1)
-            {
-                //first device
-                var filterInfo = videoDevices[deviceId];
-                Debug.WriteLine($"Connecting to [{filterInfo.Name}]...");
-                videoSource = new VideoCaptureDevice(filterInfo.MonikerString);
-
-                videoSource.NewFrame += new NewFrameEventHandler(Video_NewFrame);
-                videoSource.Start();
-            }
-            else
-            {
-                Debug.WriteLine("No video device found.");
-            }
-        }
-        private void Video_NewFrame(object sender, NewFrameEventArgs eventArgs)
-        {
-            Bitmap frame = (Bitmap)eventArgs.Frame.Clone();
-            pictureBox1.Image = frame; // Display the frame in pictureBox1
+            DIP.EmbossVertical(loaded, ref processed);
+            midPictureBox.Image = processed;
         }
         private void grayToolStripMenuItem1_Click_1(object sender, EventArgs e)
         {
-            webcamFilter = filter.Gray;
+            webcamFilter = Filter.Gray;
             if (!timer1.Enabled)
                 timer1.Enabled = true;
         }
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            turnOnAForgeDevice(comboBox1.SelectedIndex);
+            turnOnAForgeDevice(devicesComboBox.SelectedIndex);
         }
         private void sepiaToolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            webcamFilter = filter.Sepia;
+            webcamFilter = Filter.Sepia;
             if (!timer1.Enabled)
                 timer1.Enabled = true;
         }
         private void inversionToolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            webcamFilter = filter.Inversion;
+            webcamFilter = Filter.Inversion;
             if (!timer1.Enabled)
                 timer1.Enabled = true;
         }
         private void mirrorHorizontToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            webcamFilter = filter.MirrorHorizontal;
+            webcamFilter = Filter.MirrorHorizontal;
             if (!timer1.Enabled)
                 timer1.Enabled = true;
         }
         private void mirrorVerticalToolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            webcamFilter = filter.MirrorVertical;
+            webcamFilter = Filter.MirrorVertical;
             if (!timer1.Enabled)
                 timer1.Enabled = true;
         }
         private void histToolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            webcamFilter = filter.Histogram;
+            webcamFilter = Filter.Histogram;
             if (!timer1.Enabled)
                 timer1.Enabled = true;
         }
-
         private void smoothToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            webcamFilter = filter.Smooth;
+            webcamFilter = Filter.Smooth;
             if (!timer1.Enabled)
                 timer1.Enabled = true;
         }
-
         private void gaussianBlurToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            webcamFilter = filter.GaussianBlur;
+            webcamFilter = Filter.GaussianBlur;
             if (!timer1.Enabled)
                 timer1.Enabled = true;
         }
-
         private void sharpenToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            webcamFilter = filter.Sharpen;
+            webcamFilter = Filter.Sharpen;
             if (!timer1.Enabled)
                 timer1.Enabled = true;
         }
-
         private void meanRemovalToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            webcamFilter = filter.MeanRemoval;
+            webcamFilter = Filter.MeanRemoval;
             if (!timer1.Enabled)
                 timer1.Enabled = true;
         }
-
         private void embossLaplascianToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            webcamFilter = filter.EmbossLaplascian;
+            webcamFilter = Filter.EmbossLaplascian;
             if (!timer1.Enabled)
                 timer1.Enabled = true;
         }
-
         private void embossHoriVertToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            webcamFilter = filter.EmbossHoriVert;
+            webcamFilter = Filter.EmbossHoriVert;
             if (!timer1.Enabled)
                 timer1.Enabled = true;
         }
-
         private void embossAllDirectionsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            webcamFilter = filter.EmbossAllDirections;
+            webcamFilter = Filter.EmbossAllDirections;
             if (!timer1.Enabled)
                 timer1.Enabled = true;
         }
-
         private void embossLossyToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            webcamFilter = filter.EmbossLossy;
+            webcamFilter = Filter.EmbossLossy;
             if (!timer1.Enabled)
                 timer1.Enabled = true;
         }
-
         private void embossHorizontalToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            webcamFilter = filter.EmbossHorizontal;
+            webcamFilter = Filter.EmbossHorizontal;
             if (!timer1.Enabled)
                 timer1.Enabled = true;
         }
-
         private void embossVerticalToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            webcamFilter = filter.EmbossVertical;
+            webcamFilter = Filter.EmbossVertical;
             if (!timer1.Enabled)
                 timer1.Enabled = true;
         }

@@ -385,7 +385,7 @@ namespace ImageProcess2
 			return true;
 		}
 
-		public static bool Smooth(Bitmap b, int nWeight /* default to 1 */)
+		public static bool Smooth(Bitmap b, int nWeight=1 /* default to 1 */)
 		{
 			ConvMatrix m = new ConvMatrix();
 			m.SetAll(1);

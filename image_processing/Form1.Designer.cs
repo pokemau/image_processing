@@ -30,6 +30,9 @@
         {
             components = new System.ComponentModel.Container();
             menuStrip1 = new MenuStrip();
+            FILE_toolStripMenuItem = new ToolStripMenuItem();
+            OpenFile_ToolStrip = new ToolStripMenuItem();
+            SaveFile_ToolStrip = new ToolStripMenuItem();
             dIPToolStripMenuItem = new ToolStripMenuItem();
             pixelCopyToolStripMenuItem = new ToolStripMenuItem();
             greyscalingToolStripMenuItem = new ToolStripMenuItem();
@@ -66,38 +69,57 @@
             embossLossyToolStripMenuItem1 = new ToolStripMenuItem();
             embossHorizontalToolStripMenuItem1 = new ToolStripMenuItem();
             embossVerticalToolStripMenuItem1 = new ToolStripMenuItem();
-            openFileDialog1 = new OpenFileDialog();
-            saveFileDialog1 = new SaveFileDialog();
-            pictureBox1 = new PictureBox();
-            pictureBox2 = new PictureBox();
+            OpenFileDialog1 = new OpenFileDialog();
+            SaveFileDialog1 = new SaveFileDialog();
+            leftPictureBox = new PictureBox();
+            midPictureBox = new PictureBox();
             trackBar1 = new TrackBar();
-            pictureBox3 = new PictureBox();
+            rightPictureBox = new PictureBox();
             timer1 = new System.Windows.Forms.Timer(components);
-            button1 = new Button();
-            openFileDialog2 = new OpenFileDialog();
-            button2 = new Button();
-            button3 = new Button();
-            button4 = new Button();
-            openFileDialog3 = new OpenFileDialog();
-            comboBox1 = new ComboBox();
-            openToolStripMenuItem = new ToolStripMenuItem();
-            saveToolStripMenuItem = new ToolStripMenuItem();
-            fileToolStripMenuItem = new ToolStripMenuItem();
+            loadImageBtn = new Button();
+            LoadImageFileDialog = new OpenFileDialog();
+            LoadBackgroundBtn = new Button();
+            subtractBtn = new Button();
+            saveImageBtn = new Button();
+            LoadBackgroundFileDialog = new OpenFileDialog();
+            devicesComboBox = new ComboBox();
+            label1 = new Label();
             menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)leftPictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)midPictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)rightPictureBox).BeginInit();
             SuspendLayout();
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, dIPToolStripMenuItem, videoDIPToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { FILE_toolStripMenuItem, dIPToolStripMenuItem, videoDIPToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1261, 24);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
+            // 
+            // FILE_toolStripMenuItem
+            // 
+            FILE_toolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { OpenFile_ToolStrip, SaveFile_ToolStrip });
+            FILE_toolStripMenuItem.Name = "FILE_toolStripMenuItem";
+            FILE_toolStripMenuItem.Size = new Size(37, 20);
+            FILE_toolStripMenuItem.Text = "File";
+            // 
+            // OpenFile_ToolStrip
+            // 
+            OpenFile_ToolStrip.Name = "OpenFile_ToolStrip";
+            OpenFile_ToolStrip.Size = new Size(180, 22);
+            OpenFile_ToolStrip.Text = "Open";
+            OpenFile_ToolStrip.Click += OpenFile_ToolStrip_Click;
+            // 
+            // SaveFile_ToolStrip
+            // 
+            SaveFile_ToolStrip.Name = "SaveFile_ToolStrip";
+            SaveFile_ToolStrip.Size = new Size(180, 22);
+            SaveFile_ToolStrip.Text = "Save";
+            SaveFile_ToolStrip.Click += SaveFile_ToolStrip_Click;
             // 
             // dIPToolStripMenuItem
             // 
@@ -186,7 +208,7 @@
             // 
             embossLaplascianToolStripMenuItem.Name = "embossLaplascianToolStripMenuItem";
             embossLaplascianToolStripMenuItem.Size = new Size(188, 22);
-            embossLaplascianToolStripMenuItem.Text = "Emboss Laplascian";
+            embossLaplascianToolStripMenuItem.Text = "Emboss Laplacian";
             embossLaplascianToolStripMenuItem.Click += embossLaplascianToolStripMenuItem_Click;
             // 
             // embossHoriVertToolStripMenuItem
@@ -311,7 +333,7 @@
             // 
             embossLaplascianToolStripMenuItem1.Name = "embossLaplascianToolStripMenuItem1";
             embossLaplascianToolStripMenuItem1.Size = new Size(188, 22);
-            embossLaplascianToolStripMenuItem1.Text = "Emboss Laplascian";
+            embossLaplascianToolStripMenuItem1.Text = "Emboss Laplacian";
             embossLaplascianToolStripMenuItem1.Click += embossLaplascianToolStripMenuItem1_Click;
             // 
             // embossHoriVertToolStripMenuItem1
@@ -349,32 +371,23 @@
             embossVerticalToolStripMenuItem1.Text = "Emboss Vertical";
             embossVerticalToolStripMenuItem1.Click += embossVerticalToolStripMenuItem1_Click;
             // 
-            // openFileDialog1
+            // leftPictureBox
             // 
-            openFileDialog1.FileName = "openFileDialog1";
-            openFileDialog1.FileOk += openFileDialog1_FileOk;
+            leftPictureBox.Location = new Point(12, 117);
+            leftPictureBox.Name = "leftPictureBox";
+            leftPictureBox.Size = new Size(400, 400);
+            leftPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            leftPictureBox.TabIndex = 1;
+            leftPictureBox.TabStop = false;
             // 
-            // saveFileDialog1
+            // midPictureBox
             // 
-            saveFileDialog1.FileOk += saveFileDialog1_FileOk;
-            // 
-            // pictureBox1
-            // 
-            pictureBox1.Location = new Point(12, 117);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(400, 400);
-            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox1.TabIndex = 1;
-            pictureBox1.TabStop = false;
-            // 
-            // pictureBox2
-            // 
-            pictureBox2.Location = new Point(418, 117);
-            pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(400, 400);
-            pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox2.TabIndex = 2;
-            pictureBox2.TabStop = false;
+            midPictureBox.Location = new Point(418, 117);
+            midPictureBox.Name = "midPictureBox";
+            midPictureBox.Size = new Size(400, 400);
+            midPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            midPictureBox.TabIndex = 2;
+            midPictureBox.TabStop = false;
             // 
             // trackBar1
             // 
@@ -386,111 +399,101 @@
             trackBar1.TabIndex = 3;
             trackBar1.Scroll += trackBar1_Scroll;
             // 
-            // pictureBox3
+            // rightPictureBox
             // 
-            pictureBox3.Location = new Point(824, 117);
-            pictureBox3.Name = "pictureBox3";
-            pictureBox3.Size = new Size(400, 400);
-            pictureBox3.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox3.TabIndex = 4;
-            pictureBox3.TabStop = false;
+            rightPictureBox.Location = new Point(824, 117);
+            rightPictureBox.Name = "rightPictureBox";
+            rightPictureBox.Size = new Size(400, 400);
+            rightPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            rightPictureBox.TabIndex = 4;
+            rightPictureBox.TabStop = false;
             // 
             // timer1
             // 
             timer1.Interval = 1;
             timer1.Tick += timer1_Tick;
             // 
-            // button1
+            // loadImageBtn
             // 
-            button1.Location = new Point(12, 523);
-            button1.Name = "button1";
-            button1.Size = new Size(113, 30);
-            button1.TabIndex = 5;
-            button1.Text = "Load Image";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            loadImageBtn.Location = new Point(12, 523);
+            loadImageBtn.Name = "loadImageBtn";
+            loadImageBtn.Size = new Size(113, 30);
+            loadImageBtn.TabIndex = 5;
+            loadImageBtn.Text = "Load Image";
+            loadImageBtn.UseVisualStyleBackColor = true;
+            loadImageBtn.Click += LoadImageBtn_Click;
             // 
-            // openFileDialog2
+            // LoadImageFileDialog
             // 
-            openFileDialog2.FileName = "openFileDialog2";
+            LoadImageFileDialog.FileName = "openFileDialog2";
             // 
-            // button2
+            // LoadBackgroundBtn
             // 
-            button2.Location = new Point(418, 523);
-            button2.Name = "button2";
-            button2.Size = new Size(113, 30);
-            button2.TabIndex = 6;
-            button2.Text = "Load Background";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            LoadBackgroundBtn.Location = new Point(418, 523);
+            LoadBackgroundBtn.Name = "LoadBackgroundBtn";
+            LoadBackgroundBtn.Size = new Size(113, 30);
+            LoadBackgroundBtn.TabIndex = 6;
+            LoadBackgroundBtn.Text = "Load Background";
+            LoadBackgroundBtn.UseVisualStyleBackColor = true;
+            LoadBackgroundBtn.Click += LoadBackgroundBtn_Click;
             // 
-            // button3
+            // subtractBtn
             // 
-            button3.Location = new Point(824, 523);
-            button3.Name = "button3";
-            button3.Size = new Size(113, 30);
-            button3.TabIndex = 7;
-            button3.Text = "Subtract";
-            button3.UseVisualStyleBackColor = true;
-            button3.Click += button3_Click;
+            subtractBtn.Location = new Point(824, 523);
+            subtractBtn.Name = "subtractBtn";
+            subtractBtn.Size = new Size(113, 30);
+            subtractBtn.TabIndex = 7;
+            subtractBtn.Text = "Subtract";
+            subtractBtn.UseVisualStyleBackColor = true;
+            subtractBtn.Click += subtractBtn_Click;
             // 
-            // button4
+            // saveImageBtn
             // 
-            button4.Location = new Point(943, 523);
-            button4.Name = "button4";
-            button4.Size = new Size(113, 30);
-            button4.TabIndex = 8;
-            button4.Text = "Save New Image";
-            button4.UseVisualStyleBackColor = true;
+            saveImageBtn.Location = new Point(943, 523);
+            saveImageBtn.Name = "saveImageBtn";
+            saveImageBtn.Size = new Size(113, 30);
+            saveImageBtn.TabIndex = 8;
+            saveImageBtn.Text = "Save New Image";
+            saveImageBtn.UseVisualStyleBackColor = true;
+            saveImageBtn.Click += saveImageBtn_Click;
             // 
-            // openFileDialog3
+            // LoadBackgroundFileDialog
             // 
-            openFileDialog3.FileName = "openFileDialog3";
+            LoadBackgroundFileDialog.FileName = "openFileDialog3";
             // 
-            // comboBox1
+            // devicesComboBox
             // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(13, 24);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(121, 23);
-            comboBox1.TabIndex = 9;
-            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
+            devicesComboBox.FormattingEnabled = true;
+            devicesComboBox.Location = new Point(12, 47);
+            devicesComboBox.Name = "devicesComboBox";
+            devicesComboBox.Size = new Size(121, 23);
+            devicesComboBox.TabIndex = 9;
+            devicesComboBox.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
-            // openToolStripMenuItem
+            // label1
             // 
-            openToolStripMenuItem.Name = "openToolStripMenuItem";
-            openToolStripMenuItem.Size = new Size(180, 22);
-            openToolStripMenuItem.Text = "Open";
-            openToolStripMenuItem.Click += openToolStripMenuItem_Click;
-            // 
-            // saveToolStripMenuItem
-            // 
-            saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new Size(180, 22);
-            saveToolStripMenuItem.Text = "Save";
-            saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
-            // 
-            // fileToolStripMenuItem
-            // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openToolStripMenuItem, saveToolStripMenuItem });
-            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size(37, 20);
-            fileToolStripMenuItem.Text = "File";
+            label1.AutoSize = true;
+            label1.Location = new Point(12, 29);
+            label1.Name = "label1";
+            label1.Size = new Size(54, 15);
+            label1.TabIndex = 10;
+            label1.Text = "Webcam";
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1261, 583);
-            Controls.Add(comboBox1);
-            Controls.Add(button4);
-            Controls.Add(button3);
-            Controls.Add(button2);
-            Controls.Add(button1);
-            Controls.Add(pictureBox3);
+            Controls.Add(label1);
+            Controls.Add(devicesComboBox);
+            Controls.Add(saveImageBtn);
+            Controls.Add(subtractBtn);
+            Controls.Add(LoadBackgroundBtn);
+            Controls.Add(loadImageBtn);
+            Controls.Add(rightPictureBox);
             Controls.Add(trackBar1);
-            Controls.Add(pictureBox2);
-            Controls.Add(pictureBox1);
+            Controls.Add(midPictureBox);
+            Controls.Add(leftPictureBox);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
             Name = "Form1";
@@ -498,10 +501,10 @@
             Load += Form1_Load;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)leftPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)midPictureBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)rightPictureBox).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -515,21 +518,21 @@
         private ToolStripMenuItem inversionToolStripMenuItem;
         private ToolStripMenuItem mirrorHorizontalToolStripMenuItem;
         private ToolStripMenuItem mirrorVerticalToolStripMenuItem;
-        private OpenFileDialog openFileDialog1;
-        private SaveFileDialog saveFileDialog1;
-        private PictureBox pictureBox1;
-        private PictureBox pictureBox2;
+        private OpenFileDialog OpenFileDialog1;
+        private SaveFileDialog SaveFileDialog1;
+        private PictureBox leftPictureBox;
+        private PictureBox midPictureBox;
         private ToolStripMenuItem histToolStripMenuItem;
         private TrackBar trackBar1;
         private ToolStripMenuItem sepiaToolStripMenuItem;
-        private PictureBox pictureBox3;
+        private PictureBox rightPictureBox;
         private System.Windows.Forms.Timer timer1;
-        private Button button1;
-        private OpenFileDialog openFileDialog2;
-        private Button button2;
-        private Button button3;
-        private Button button4;
-        private OpenFileDialog openFileDialog3;
+        private Button loadImageBtn;
+        private OpenFileDialog LoadImageFileDialog;
+        private Button LoadBackgroundBtn;
+        private Button subtractBtn;
+        private Button saveImageBtn;
+        private OpenFileDialog LoadBackgroundFileDialog;
         private ToolStripMenuItem smoothToolStripMenuItem;
         private ToolStripMenuItem gaussianBlurToolStripMenuItem;
         private ToolStripMenuItem sharpenToolStripMenuItem;
@@ -548,7 +551,7 @@
         private ToolStripMenuItem mirrorVerticalToolStripMenuItem2;
         private ToolStripMenuItem sepiaToolStripMenuItem2;
         private ToolStripMenuItem histToolStripMenuItem2;
-        private ComboBox comboBox1;
+        private ComboBox devicesComboBox;
         private ToolStripMenuItem smoothToolStripMenuItem1;
         private ToolStripMenuItem gaussianBlurToolStripMenuItem1;
         private ToolStripMenuItem sharpenToolStripMenuItem1;
@@ -559,8 +562,9 @@
         private ToolStripMenuItem embossLossyToolStripMenuItem1;
         private ToolStripMenuItem embossHorizontalToolStripMenuItem1;
         private ToolStripMenuItem embossVerticalToolStripMenuItem1;
-        private ToolStripMenuItem fileToolStripMenuItem;
-        private ToolStripMenuItem openToolStripMenuItem;
-        private ToolStripMenuItem saveToolStripMenuItem;
+        private ToolStripMenuItem FILE_toolStripMenuItem;
+        private ToolStripMenuItem OpenFile_ToolStrip;
+        private ToolStripMenuItem SaveFile_ToolStrip;
+        private Label label1;
     }
 }

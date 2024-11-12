@@ -26,7 +26,7 @@ namespace image_processing
         } 
     } 
    
-    static class BasicDIP
+    static class DIP
     {
         public static void PixelCopy(Bitmap a, ref Bitmap b)
         {
@@ -325,7 +325,7 @@ namespace image_processing
             result = Conv3x3(reference, m);
         }
 
-        public static void EmbossLaplascian(Bitmap reference, ref Bitmap result, int nWeight = 4)
+        public static void EmbossLaplacian(Bitmap reference, ref Bitmap result, int nWeight = 4)
         {
             ConvMatrix m = new ConvMatrix();
             m.SetAll(-1);
